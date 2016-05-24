@@ -26,18 +26,6 @@
 @end
 
 @implementation MCAVPlayerItemRemoteCacheTask
-
-+ (NSOperationQueue *)downloadOperationQueue
-{
-    static dispatch_once_t onceToken;
-    static NSOperationQueue *__downloadOperationQueue;
-    dispatch_once(&onceToken, ^{
-        __downloadOperationQueue = [[NSOperationQueue alloc] init];
-        __downloadOperationQueue.name = @"com.avplayeritem.mccache.download";
-    });
-    return __downloadOperationQueue;
-}
-
 - (void)main
 {
     @autoreleasepool
@@ -86,7 +74,6 @@
     }
     
     _connection = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self startImmediately:NO];
-    [_connection setDelegateQueue:[[self class] downloadOperationQueue]];
     [_connection start];
     [self startRunLoop];
 }
