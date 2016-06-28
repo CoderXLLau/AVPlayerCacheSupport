@@ -60,6 +60,7 @@
 {
     NSMutableURLRequest *urlRequest = [loadingRequest.request mutableCopy];
     urlRequest.URL = [loadingRequest.request.URL mc_avplayerOriginalURL];
+    urlRequest.cachePolicy = NSURLRequestReloadIgnoringCacheData;
     _offset = 0;
     _requestLength = 0;
     if (!(_response && ![_response mc_supportRange]))
