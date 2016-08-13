@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^MCAVPlayerItemCacheTaskFinishedBlock)(NSError *error);
+@class MCAVPlayerItemCacheTask;
+typedef void (^MCAVPlayerItemCacheTaskFinishedBlock)(MCAVPlayerItemCacheTask *task,NSError *error);
 
 @class MCAVPlayerItemCacheFile;
 @class AVAssetResourceLoadingRequest;

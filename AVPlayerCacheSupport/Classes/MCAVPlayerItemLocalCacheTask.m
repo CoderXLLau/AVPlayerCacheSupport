@@ -45,7 +45,7 @@
 {
     if (self.finishBlock)
     {
-        self.finishBlock(nil);
+        self.finishBlock(self,nil);
     }
 }
 @end

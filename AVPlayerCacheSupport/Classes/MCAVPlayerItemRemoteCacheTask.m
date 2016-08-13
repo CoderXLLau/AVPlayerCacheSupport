@@ -44,7 +44,7 @@
 {
     if (self.finishBlock)
     {
-        self.finishBlock(_error);
+        self.finishBlock(self,_error);
     }
 }
 
@@ -52,8 +52,6 @@
 {
     [super cancel];
     [_connection cancel];
-    [self synchronizeCacheFileIfNeeded];
-    [self stopRunLoop];
 }
 
 - (void)startURLRequestWithRequest:(AVAssetResourceLoadingRequest *)loadingRequest range:(NSRange)range
@@ -135,14 +133,11 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    if ([_cacheFile saveData:data atOffset:_offset synchronize:NO])
+    if (data.bytes && [_cacheFile saveData:data atOffset:_offset synchronize:NO])
     {
         _dataSaved = YES;
         _offset += [data length];
-        if (![self isCancelled])
-        {
-            [_loadingRequest.dataRequest respondWithData:data];
-        }
+        [_loadingRequest.dataRequest respondWithData:data];
     }
 }
 

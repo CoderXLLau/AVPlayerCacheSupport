@@ -21,18 +21,13 @@
     return self;
 }
 
-- (void)cancel
-{
-
-}
-
 - (void)main
 {
     @autoreleasepool
     {
         if (_finishBlock)
         {
-            _finishBlock(nil);
+            _finishBlock(self,nil);
         }
     }
 }

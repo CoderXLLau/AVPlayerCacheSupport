@@ -159,10 +159,20 @@
     _operationQueue.suspended = NO;
 }
 
-- (void)cancelCurrentRequest
+- (void)cancelCurrentRequest:(BOOL)finishCurrentRequest
 {
     [_operationQueue cancelAllOperations];
-    [self cleanUpCurrentRequest];
+    if (finishCurrentRequest)
+    {
+        if (!_currentRequest.isFinished)
+        {
+            [self currentRequestFinished:[NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil]];
+        }
+    }
+    else
+    {
+        [self cleanUpCurrentRequest];
+    }
 }
 
 - (void)currentRequestFinished:(NSError *)error
@@ -200,8 +210,12 @@
         [(MCAVPlayerItemRemoteCacheTask *)task setResponse:_response];
     }
     __weak typeof(self)weakSelf = self;
-    task.finishBlock = ^(NSError *error)
+    task.finishBlock = ^(MCAVPlayerItemCacheTask *task, NSError *error)
     {
+        if (task.cancelled || error.code == NSURLErrorCancelled)
+        {
+            return;
+        }
         __strong __typeof(weakSelf)strongSelf = weakSelf;
         if (error)
         {
@@ -221,6 +235,7 @@
 #pragma mark - resource loader delegate
 - (BOOL)resourceLoader:(AVAssetResourceLoader *)resourceLoader shouldWaitForLoadingOfRequestedResource:(AVAssetResourceLoadingRequest *)loadingRequest
 {
+    [self cancelCurrentRequest:YES];
     [_pendingRequests addObject:loadingRequest];
     [self startNextRequest];
     return YES;
@@ -230,7 +245,7 @@
 {
     if (_currentRequest == loadingRequest)
     {
-        [self cancelCurrentRequest];
+        [self cancelCurrentRequest:NO];
     }
     else
     {
