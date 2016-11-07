@@ -10,7 +10,17 @@
 #import "MCAVPlayerItemCacheFile.h"
 #import "MCCacheSupportUtils.h"
 
+@interface MCAVPlayerItemLocalCacheTask ()
+
+@property (assign, nonatomic, getter = isExecuting) BOOL executing;
+@property (assign, nonatomic, getter = isFinished) BOOL finished;
+
+@end
+
 @implementation MCAVPlayerItemLocalCacheTask
+@synthesize executing = _executing;
+@synthesize finished = _finished;
+
 - (void)main
 {
     @autoreleasepool
@@ -20,6 +30,9 @@
             [self handleFinished];
             return;
         }
+        
+        [self setFinished:NO];
+        [self setExecuting:YES];
         
         NSUInteger offset = _range.location;
         NSUInteger lengthPerRead = 10000;
@@ -47,5 +60,22 @@
     {
         self.finishBlock(self,nil);
     }
+    
+    [self setExecuting:NO];
+    [self setFinished:YES];
+}
+
+- (void)setFinished:(BOOL)finished
+{
+    [self willChangeValueForKey:@"isFinished"];
+    _finished = finished;
+    [self didChangeValueForKey:@"isFinished"];
+}
+
+- (void)setExecuting:(BOOL)executing
+{
+    [self willChangeValueForKey:@"isExecuting"];
+    _executing = executing;
+    [self didChangeValueForKey:@"isExecuting"];
 }
 @end

@@ -23,9 +23,15 @@
     
     CFRunLoopRef _runloop;
 }
+
+@property (assign, nonatomic, getter = isExecuting) BOOL executing;
+@property (assign, nonatomic, getter = isFinished) BOOL finished;
 @end
 
 @implementation MCAVPlayerItemRemoteCacheTask
+@synthesize executing = _executing;
+@synthesize finished = _finished;
+
 - (void)main
 {
     @autoreleasepool
@@ -35,6 +41,9 @@
             [self handleFinished];
             return;
         }
+        
+        [self setFinished:NO];
+        [self setExecuting:YES];
         [self startURLRequestWithRequest:_loadingRequest range:_range];
         [self handleFinished];
     }
@@ -46,6 +55,8 @@
     {
         self.finishBlock(self,_error);
     }
+    [self setExecuting:NO];
+    [self setFinished:YES];
 }
 
 - (void)cancel
@@ -152,5 +163,19 @@
     [self synchronizeCacheFileIfNeeded];
     _error = error;
     [self stopRunLoop];
+}
+
+- (void)setFinished:(BOOL)finished
+{
+    [self willChangeValueForKey:@"isFinished"];
+    _finished = finished;
+    [self didChangeValueForKey:@"isFinished"];
+}
+
+- (void)setExecuting:(BOOL)executing
+{
+    [self willChangeValueForKey:@"isExecuting"];
+    _executing = executing;
+    [self didChangeValueForKey:@"isExecuting"];
 }
 @end
