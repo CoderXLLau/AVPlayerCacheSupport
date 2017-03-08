@@ -143,7 +143,7 @@
             {
                 if (firstNotCachedRange.location > start)
                 {
-                    [self addTaskWithRange:NSMakeRange(start, firstNotCachedRange.location) cached:YES];
+                    [self addTaskWithRange:NSMakeRange(start, firstNotCachedRange.location - start) cached:YES];
                 }
                 NSUInteger notCachedEnd = MIN(NSMaxRange(firstNotCachedRange), end);
                 [self addTaskWithRange:NSMakeRange(firstNotCachedRange.location, notCachedEnd - firstNotCachedRange.location) cached:NO];
