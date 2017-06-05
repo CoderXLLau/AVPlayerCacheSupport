@@ -365,7 +365,7 @@ const NSString *MCAVPlayerCacheFileResponseHeadersKey = @"responseHeaders";
     @try
     {
         [_writeFileHandle seekToFileOffset:offset];
-        [_writeFileHandle writeData:data];
+        [_writeFileHandle mc_safeWriteData:data];
     }
     @catch (NSException * e)
     {

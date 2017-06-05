@@ -114,3 +114,7 @@ NS_INLINE NSString *MCCacheDocumentyDirectory()
 @interface AVAssetResourceLoadingRequest (MCCacheSupport)
 - (void)mc_fillContentInformation:(NSHTTPURLResponse *)response;
 @end
+
+@interface NSFileHandle (MCCacheSupport)
+- (BOOL)mc_safeWriteData:(NSData *)data;
+@end
